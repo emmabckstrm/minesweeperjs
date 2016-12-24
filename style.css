@@ -1,0 +1,19 @@
+
+#gameBoard .row {
+	margin: 0;
+	padding: 0;
+	outline: 0;
+}
+#gameBoard .row .brick {
+	display: inline-block;
+	width: 25px;
+	height: 25px;
+	background: #ddd;
+	border: 1px solid #ccc;
+	margin: 0;
+	padding: 0;
+}
+
+#gameBoard .row .brick.open {
+	background: pink;
+}
