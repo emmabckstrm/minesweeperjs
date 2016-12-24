@@ -26,6 +26,68 @@ var msModel = function() {
 	this.cols = 6;
 	this.board = undefined;
 
+	this.createBrick = function() {
+		var brick = {
+			mine: false,
+			open: false,
+			minesSurrounding: 0
+		};
+
+		return brick;
+	};
+
+	this.createBoard = function(rows, cols, callback) {
+		var board = [];
+
+		// create one row at a time
+		for (var r = 0; r < rows; r++) {
+			var row = [];
+
+			// for each row, create columns accordingly
+			for (var c = 0; c < cols; c++) {
+				var brick = this.createBrick();
+				row.push(brick);
+			}
+
+			board.push(row);
+		}
+
+		this.board = board;
+		this.placeMines(this.board, mineNum);
+		callback();
+	};
+
+	this.placeMines = function(board, mineNum) {
+		var totRow = board.length;
+		var totCol = board[0].length;
+
+		for (var i = 0; i < mineNum; i++) {
+
+			var tryPlacingMine = true;
+
+			while (tryPlacingMine) {
+
+				var row = this.getRandomInt(0, totRow-1);
+				var col = this.getRandomInt(0, totCol-1);
+
+				if (board[row][col].mine == false) {
+					board[row][col].mine = true;
+					tryPlacingMine = false;
+				}
+
+			}
+		
+		}
+	};
+
+	// Returns a random integer between min (included) and max (included)
+	// Using Math.round() will give you a non-uniform distribution!
+	this.getRandomInt = function(min, max) {
+		min = Math.ceil(min);
+		max = Math.floor(max);
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	};
 	
+
 
 };
