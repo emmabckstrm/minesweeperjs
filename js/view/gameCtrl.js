@@ -6,13 +6,11 @@ var GameCtrl = function(view, model) {
 	//	closePopup();
 	//});
 
-	view.startGame.click(function(){
-		startGame();
-
-		console.log(view.gameBoard);
+	view.newGame.click(function(){
+		newGame();
 	});
 
-	var startGame = function() {
+	var newGame = function() {
 		var rows = 4;
 		var cols = 6;
 
@@ -21,12 +19,12 @@ var GameCtrl = function(view, model) {
 		});
 		view.createDOMBoard(model.board);
 		
-		view.gameBrick.click(function(){
-			openBrick(this);
+		view.gameTile.click(function(){
+			openTile(this);
 		});
 	};
 
-	var getBrickPosition = function(id) {
+	var getTilePosition = function(id) {
 		var row = "";
 		var col = "";
 
@@ -36,16 +34,21 @@ var GameCtrl = function(view, model) {
 		return [Number(row), Number(col)];
 	};
 
-	var openBrick = function(brick) {
-		var position = getBrickPosition(brick.id);
+	var openTile = function(tile) {
+		var position = getTilePosition(tile.id);
 		var row = position[0];
 		var col = position[1];
-		var openedBrick = model.board[row][col];
+		var openedTile = model.board[row][col];
 
-		if (openedBrick.mine) {
-			gameOver();
-		} else {
-			brick.className += " open";
+		if (openedTile.open === false) {
+
+			openedTile.open = true;
+
+			if (openedTile.mine) {
+				gameOver();
+			} else {
+				tile.className += " open";
+			}
 		}
 	};
 

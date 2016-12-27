@@ -26,15 +26,15 @@ var msModel = function() {
 	this.cols = 6;
 	this.board = undefined;
 
-	this.createBrick = function() {
-		var brick = {
+	this.createTile = function() {
+		var tile = {
 			mine: false,
 			open: false,
-			surroundingMines: 0,
+			adjacentMines: 0,
 			flagged: false
 		};
 
-		return brick;
+		return tile;
 	};
 
 	this.createBoard = function(rows, cols, callback) {
@@ -46,8 +46,8 @@ var msModel = function() {
 
 			// for each row, create columns accordingly
 			for (var c = 0; c < cols; c++) {
-				var brick = this.createBrick();
-				row.push(brick);
+				var tile = this.createTile();
+				row.push(tile);
 			}
 
 			board.push(row);
@@ -90,9 +90,9 @@ var msModel = function() {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	};
 
-	this.countSurrounding = function(r, c, rowPos, colPos) {
+	// counts how many of the adjacent tiles that are mines
+	this.countAdjacentMines = function(r, c, rowPos, colPos) {
 		var mineCount = 0;
-		console.log(rowPos, colPos);
 
 		for (var i = 0; i < rowPos.length; i++) {
 			if ( this.board[r+rowPos[i]][c+colPos[i]].mine === true ) {
@@ -148,8 +148,8 @@ var msModel = function() {
 					}
 				}
 
-				mineCount = this.countSurrounding(r, c, rAround, cAround);
-				this.board[r][c].surroundingMines = mineCount;
+				mineCount = this.countAdjacentMines(r, c, rAround, cAround);
+				this.board[r][c].adjacentMines = mineCount;
 			}
 
 		}

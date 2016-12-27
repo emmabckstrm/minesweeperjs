@@ -2,13 +2,13 @@ var GameView = function (container, model) {
 	this.container = container;
 
 	this.gameBoard = container.find("#gameBoard");
-	this.startGame = container.find("#startGame");
-	this.gameBrick = container.find(".brick");
+	this.newGame = container.find("#startGame");
+	this.gameTile = container.find(".tile");
 
 	model.addObserver(this);
 
 	this.update = function() {
-		this.gameBrick = container.find(".brick");
+		this.gameTile = container.find(".tile");
 	};
 
 
@@ -25,30 +25,29 @@ var GameView = function (container, model) {
 			// for each row, create columns accordingly
 			for (var c = 0; c < cols; c++) {
 				
-				var brick = document.createElement("div");
-				brick.className = "brick";
-				var brickID = "ms";
+				var tile = document.createElement("div");
+				tile.className = "tile";
+				var tileID = "ms";
 
 				if ( r < 10 ) {
-					brickID += "0" + String(r);
+					tileID += "0" + String(r);
 				} else {
-					brickID += String(r);
+					tileID += String(r);
 				}
 
 				if ( c < 10 ) {
-					brickID += "0" + String(c);
+					tileID += "0" + String(c);
 				} else {
-					brickID += String(c);
+					tileID += String(c);
 				}
 
-				brick.id = brickID;
+				tile.id = tileID;
 				
-				row.appendChild(brick);
+				row.appendChild(tile);
 			}
-			console.log(row);
 
 			this.gameBoard.append(row);
-			this.gameBrick = container.find(".brick");
+			this.gameTile = container.find(".tile");
 			model.notifyObservers();
 		}
 
