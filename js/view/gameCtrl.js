@@ -1,11 +1,5 @@
 var GameCtrl = function(view, model) {
 
-	
-	//view.closePopup.click(function(){
-		// closes the popup
-	//	closePopup();
-	//});
-
 	view.newGame.click(function(){
 		newGame();
 	});
@@ -45,13 +39,20 @@ var GameCtrl = function(view, model) {
 			openedTile.open = true;
 
 			if (openedTile.mine) {
+				tile.className += " mine";
+				tile.innerHTML = "*";
 				gameOver();
 			} else {
 				tile.className += " open";
+				if (openedTile.adjacentMines === 0) {
+					tile.innerHTML = " ";
+				} else {
+					tile.className += (" num" + String(openedTile.adjacentMines));
+					tile.innerHTML = String(openedTile.adjacentMines);
+				}
 			}
 		}
 	};
-
 
 	var gameOver = function() {
 		console.log("You lost");
