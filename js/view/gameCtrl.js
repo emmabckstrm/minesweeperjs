@@ -13,9 +13,20 @@ var GameCtrl = function(view, model) {
 		});
 		view.createDOMBoard(model.board);
 		
-		view.gameTile.click(function(){
+		// add event listener on game tiles
+		var tiles = view.gameTile;
+
+		tiles.click(function(e){
 			openTile(this);
 		});
+
+		for (var i = 0; i < tiles.length; i++) {
+
+			tiles[i].addEventListener("contextmenu", function(e){
+				e.preventDefault();
+				flagTile(this);
+			}, false);
+		}
 	};
 
 	var getTilePosition = function(id) {
@@ -38,20 +49,49 @@ var GameCtrl = function(view, model) {
 
 			openedTile.open = true;
 
-			if (openedTile.mine) {
+			if (openedTile.mine) { // if the opened tile is a mine
 				tile.className += " mine";
 				tile.innerHTML = "*";
 				gameOver();
 			} else {
 				tile.className += " open";
-				if (openedTile.adjacentMines === 0) {
+				if (openedTile.adjacentMines === 0) { // if it's an empty tile
 					tile.innerHTML = " ";
+					// check surrounding and open adjacent empty tiles
 				} else {
 					tile.className += (" num" + String(openedTile.adjacentMines));
 					tile.innerHTML = String(openedTile.adjacentMines);
 				}
 			}
 		}
+	};
+
+	var flagTile = function(tile) {
+		// flags the tile. Can only flag unopened tiles. Deflags flagged tiles
+		var position = getTilePosition(tile.id);
+		var row = position[0];
+		var col = position[1];
+		var clickedTile = model.board[row][col];
+
+		if (clickedTile.open === false) {
+
+			if (clickedTile.flagged === false) {
+				
+				clickedTile.flagged = true;
+				tile.innerHTML = "F";
+
+			} else if (clickedTile.flagged === true) {
+
+				clickedTile.flagged = false;
+				tile.innerHTML = "";
+
+			}
+		}
+	};
+
+	var openSurrounding = function() {
+		// gets clicked tile, if it's empty, open it 
+		// checks surrounding tiles, if a surrounding tile is empty, check its surrounding
 	};
 
 	var gameOver = function() {
