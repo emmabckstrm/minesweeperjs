@@ -52,4 +52,37 @@ var GameView = function (container, model) {
 		}
 
 	};
+
+	this.getViewObj = function(row, col) {
+		var tile = this.gameBoard[0].childNodes[row].childNodes[col];
+		return tile;
+	};
+
+	this.openMine = function(row, col) {
+		var tile = this.getViewObj(row, col);
+		tile.classList.add("mine");
+		tile.innerHTML = "*";
+	};
+
+	this.openTile = function(row, col, content) {
+		var tile = this.getViewObj(row, col);
+		tile.classList.add("open");
+
+		if (content === 0) {
+			tile.innerHTML = " ";
+		} else {
+			tile.classList.add("num" + String(content));
+			tile.innerHTML = String(content);
+		}
+	};
+
+	this.flagTile = function(row, col, f) {
+		var tile = this.getViewObj(row, col);
+
+		if (f === true) {
+			tile.innerHTML = "F";
+		} else {
+			tile.innerHTML = "";
+		}
+	};
 };

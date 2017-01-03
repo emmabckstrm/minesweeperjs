@@ -17,7 +17,10 @@ var GameCtrl = function(view, model) {
 		var tiles = view.gameTile;
 
 		tiles.click(function(e){
-			openTile(this);
+			var position = getTilePosition(this.id);
+			var row = position[0];
+			var col = position[1];
+			openTile(row, col);
 		});
 
 		for (var i = 0; i < tiles.length; i++) {
@@ -39,10 +42,8 @@ var GameCtrl = function(view, model) {
 		return [Number(row), Number(col)];
 	};
 
-	var openTile = function(tile) {
-		var position = getTilePosition(tile.id);
-		var row = position[0];
-		var col = position[1];
+	var openTile = function(row, col) {
+		
 		var openedTile = model.board[row][col];
 
 		if (openedTile.open === false) {
@@ -50,17 +51,13 @@ var GameCtrl = function(view, model) {
 			openedTile.open = true;
 
 			if (openedTile.mine) { // if the opened tile is a mine
-				tile.className += " mine";
-				tile.innerHTML = "*";
+				view.openMine(row, col);
 				gameOver();
 			} else {
-				tile.className += " open";
+				view.openTile(row, col, openedTile.adjacentMines);
 				if (openedTile.adjacentMines === 0) { // if it's an empty tile
-					tile.innerHTML = " ";
 					// check surrounding and open adjacent empty tiles
-				} else {
-					tile.className += (" num" + String(openedTile.adjacentMines));
-					tile.innerHTML = String(openedTile.adjacentMines);
+					openSurrounding(row,col);
 				}
 			}
 		}
