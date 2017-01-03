@@ -75,20 +75,43 @@ var GameCtrl = function(view, model) {
 			if (clickedTile.flagged === false) {
 				
 				clickedTile.flagged = true;
-				tile.innerHTML = "F";
+				view.flagTile(row, col, true);
 
 			} else if (clickedTile.flagged === true) {
 
 				clickedTile.flagged = false;
-				tile.innerHTML = "";
+				view.flagTile(row, col, false);
 
 			}
 		}
 	};
 
-	var openSurrounding = function() {
+	var openSurrounding = function(r, c) {
 		// gets clicked tile, if it's empty, open it 
 		// checks surrounding tiles, if a surrounding tile is empty, check its surrounding
+
+		var surroundingPos = model.getSurroundingPos(r, c);
+		var rAround = surroundingPos[0];
+		var cAround = surroundingPos[1];
+
+		for (var i = 0; i < rAround.length; i++) {
+
+			var currentRow = r+rAround[i];
+			var currentCol = c+cAround[i];
+			var currentTile = model.board[currentRow][currentCol];
+
+			if (currentTile.open === false && currentTile.flagged === false && currentTile.mine === false) {
+
+				if (currentTile.adjacentMines === 0) {
+					openTile(currentRow,currentCol);
+					openSurrounding(currentRow,currentCol);
+				} else {
+					openTile(currentRow,currentCol);
+				}
+
+			}
+
+		}
 	};
 
 	var gameOver = function() {

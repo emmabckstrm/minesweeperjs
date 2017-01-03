@@ -103,52 +103,60 @@ var msModel = function() {
 		return mineCount;
 	};
 
-	this.checkSurrounding = function() {
-		var board = this.board;
-		var mineCount;
+	// notes: maybe a new function that only get the adjacent positions and returns the positions?
+	this.getSurroundingPos = function(r, c) {
 		var rAround;
 		var cAround;
+
+		if (r === 0) { // first row
+			if (c === 0) {
+				rAround = [0, 1, 1];
+				cAround = [1, 0, 1];
+			} else if (c === this.board[0].length-1) {
+				rAround = [0, 1, 1];
+				cAround = [-1, -1, 0];
+			} else {
+				rAround = [0, 1, 1, 1, 0];
+				cAround = [-1, -1, 0, 1, 1];
+			}
+		} else if (r === this.board.length-1) { // last row
+			if (c === 0) {
+				rAround = [-1, -1, 0];
+				cAround = [0, 1, 1];
+			} else if (c === this.board[0].length-1) {
+				rAround = [0, -1, -1];
+				cAround = [-1, -1, 0];
+			} else {
+				rAround = [0, -1, -1, -1, 0];
+				cAround = [-1, -1, 0, 1, 1];
+			}
+		} else { // the other rows
+			if (c === 0) {
+				rAround = [-1, -1, 0, 1, 1];
+				cAround = [0, 1, 1, 0, 1];
+			} else if (c === this.board[0].length-1) {
+				rAround = [-1, -1, 0, 1, 1];
+				cAround = [-1, 0, -1, -1, 0];
+			} else {
+				rAround = [-1, -1, -1, 0, 0, 1, 1, 1];
+				cAround = [-1, 0, 1, -1, 1, -1, 0, 1];
+			}
+		}
+
+		return [rAround, cAround];
+
+	};
+
+	this.checkSurrounding = function() {
+		var board = this.board;
 
 		for (var r = 0; r < board.length; r++) {
 
 			for (var c = 0; c < board[0].length; c++) {
 
-				if (r === 0) { // first row
-					if (c === 0) {
-						rAround = [0, 1, 1];
-						cAround = [1, 0, 1];
-					} else if (c === board[0].length-1) {
-						rAround = [0, 1, 1];
-						cAround = [-1, -1, 0];
-					} else {
-						rAround = [0, 1, 1, 1, 0];
-						cAround = [-1, -1, 0, 1, 1];
-					}
-				} else if (r === board.length-1) { // last row
-					if (c === 0) {
-						rAround = [-1, -1, 0];
-						cAround = [0, 1, 1];
-					} else if (c === board[0].length-1) {
-						rAround = [0, -1, -1];
-						cAround = [-1, -1, 0];
-					} else {
-						rAround = [0, -1, -1, -1, 0];
-						cAround = [-1, -1, 0, 1, 1];
-					}
-				} else { // the other rows
-					if (c === 0) {
-						rAround = [-1, -1, 0, 1, 1];
-						cAround = [0, 1, 1, 0, 1];
-					} else if (c === board[0].length-1) {
-						rAround = [-1, -1, 0, 1, 1];
-						cAround = [-1, 0, -1, -1, 0];
-					} else {
-						rAround = [-1, -1, -1, 0, 0, 1, 1, 1];
-						cAround = [-1, 0, 1, -1, 1, -1, 0, 1];
-					}
-				}
+				var surroundingPos = this.getSurroundingPos(r,c);
 
-				mineCount = this.countAdjacentMines(r, c, rAround, cAround);
+				var mineCount = this.countAdjacentMines(r, c, surroundingPos[0], surroundingPos[1]);
 				this.board[r][c].adjacentMines = mineCount;
 			}
 
